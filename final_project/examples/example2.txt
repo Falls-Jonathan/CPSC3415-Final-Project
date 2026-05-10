@@ -1,0 +1,14 @@
+Print("This will test variables, assignment, logical operators, and Arithmetic.");
+x = 53;
+y="temporary";
+z    =True;
+z == y;
+z!=y;
+x > 20;
+x < 130;
+print(x <=52);
+print(325 >= x);
+a = x + 10;
+c = x - 31;
+b = x * x;
+d = x / 7;

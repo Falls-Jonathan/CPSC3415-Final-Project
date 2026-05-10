@@ -1,4 +1,5 @@
-import ohm from "ohm-js"
+import * as ohm from "ohm-js"
+import fs from "fs"
 
 const gram = ohm.grammar(String.raw`Final_Project {
   	Program = Statement+
@@ -7,6 +8,17 @@ const gram = ohm.grammar(String.raw`Final_Project {
   	logiAND = "&&" | "AND"
   	logiOR  = "||" | "OR"
     
+    keyword =
+    				  "if"			~identChar
+					| "else"		~identChar
+					| "while"		~identChar
+					| "func"		~identChar
+					| "return"		~identChar
+					| "print"		~identChar
+					| "True"		~identChar
+					| "False"		~identChar
+    
+	identChar = letter | digit | "_"
 
   	exp     = logicExp
 
@@ -16,7 +28,12 @@ const gram = ohm.grammar(String.raw`Final_Project {
 
 	addExp   = mulExp (spaces ("+" | "-") spaces mulExp)*
 
-	mulExp   = term (spaces ("*" | "/") spaces term)*
+	mulExp   = primary (spaces ("*" | "/") spaces primary)*
+
+	primary = call
+    			  | term
+
+    call = ident spaces "(" spaces argList? spaces ")"
 
   	term = num
      		| str
@@ -32,13 +49,27 @@ const gram = ohm.grammar(String.raw`Final_Project {
 
   	bool = "True" | "False"
     
+    argList = exp (spaces "," spaces exp)*
+    
     Block = "{" spaces Statement* spaces "}"
 
   	Statement = AssignStmt
+    				   | FuncDecStmt
+                       | ReturnStmt
+                       | ExprStmt
           			   | PrintStmt
           			   | IfStmt
           			   | WhileStmt
                        | ForStmt
+    
+    
+    ExprStmt = exp ";"
+    
+    FuncDecStmt = "func" spaces ident spaces "(" spaces ParamList? spaces ")" spaces Block
+    
+    ReturnStmt = "return" spaces exp ";"
+  
+  	ParamList = ident (spaces "," spaces ident)*
     
     AssignStmt = ident spaces "=" spaces exp ";"
     
@@ -55,5 +86,10 @@ const gram = ohm.grammar(String.raw`Final_Project {
     
 }`);
 
-const mch = ohm.match(`x= 40
-    print(x)`)
+const mch = gram.match(fs.readFileSync(process.argv[2]));
+
+if(mch.failed()){
+	console.error(mch.message)
+}else{
+	console.log("Success!!")
+}

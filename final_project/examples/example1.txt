@@ -1,0 +1,7 @@
+print("This will test the different data types, it will also test spacing requirements (or lack there of). This would be a string btw");
+print ( " This is a num " );
+print (25);
+Print    ("this is a num added to a num");
+print (10 + 5);
+print(True);
+print("This file should return Success!!");
